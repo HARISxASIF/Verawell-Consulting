@@ -5,6 +5,7 @@ import DefaultTopBar from "../components/DefaultTopBar";
 import HomeTopBar from "../components/HomeTopBar";
 
 const ClientPackagesPage = () => {
+  
   return (
     <>
       {/* MasterLayout */}

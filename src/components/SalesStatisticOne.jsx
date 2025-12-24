@@ -1,15 +1,53 @@
-  import { Icon } from '@iconify/react/dist/iconify.js';
-  import React from 'react';
-  import ReactApexChart from 'react-apexcharts';
+import { Icon } from "@iconify/react/dist/iconify.js";
+import React from "react";
+import ReactApexChart from "react-apexcharts";
 
-  const SalesStatisticOne = () => {
-      // let { chartOptions, chartSeries } = useReactApexChart();
-      
-        let chartSeries = [
+const SalesStatisticOne = () => {
+  // let { chartOptions, chartSeries } = useReactApexChart();
+  const [activeTab, setActiveTab] = React.useState("tab1");
+
+  let chartSeries = [
     {
       name: "This month",
       data: [0, 20, 12, 25, 45, 42, 60, 50, 40, 50, 80, 90],
     },
+  ];
+
+  const monthSeries = [
+    {
+      name: "This month",
+      data: [0, 20, 12, 25, 45, 42, 60, 50, 40, 50, 80, 90],
+    },
+  ];
+
+  const foodSeries = [
+    {
+      name: "Brand Score",
+      data: [98, 10, 35, 92, 69], // random out of 100
+    },
+  ];
+
+  const monthCategories = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const foodCategories = [
+    "KFC",
+    "Burger King",
+    "White Castle",
+    "Nobu",
+    "Five Guys",
   ];
 
   let chartOptions = {
@@ -62,27 +100,11 @@
       colors: ["#FF0000"],
     },
     xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
+      categories: activeTab === "tab1" ? monthCategories : foodCategories,
       tooltip: {
         enabled: false,
       },
       labels: {
-        formatter: function (value) {
-          return value;
-        },
         style: {
           fontSize: "14px",
         },
@@ -90,49 +112,34 @@
       axisBorder: {
         show: false,
       },
-      crosshairs: {
-        show: true,
-        width: 30,
-        stroke: {
-          width: 0,
-        },
-        fill: {
-          type: "solid",
-          color: "#d14f5183",
-        },
+    },
+
+    tooltip: {
+      enabled: true,
+      custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+        const label =
+          w.config.xaxis.categories &&
+          w.config.xaxis.categories[dataPointIndex];
+
+        const value = series[seriesIndex][dataPointIndex];
+
+        // Tab-aware text
+        const title = label ?? (activeTab === "tab1" ? "This Month" : "Total");
+        const valueText =
+          activeTab === "tab1" ? `${value} Form Submitted` : `${value} Score`;
+
+        return `
+      <div style="padding: 10px; background: #fff; border-radius: 5px; border: 1px solid #ddd;">
+        <div style="font-size: 14px; color: #333; font-weight: bold;">
+          ${title}
+        </div>
+        <div style="font-size: 16px; color: #8B2885; font-weight: bold;">
+          ${valueText}
+        </div>
+      </div>
+    `;
       },
     },
-
-  tooltip: {
-    enabled: true,
-    custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-
-      // Check if categories are available, otherwise use fallback
-      let month = w.config.xaxis.categories && w.config.xaxis.categories[dataPointIndex];
-      let value = series[seriesIndex][dataPointIndex];
-
-      if (month === undefined) {
-        month = "This Month"; // Default value if month is undefined
-      }
-
-      return `
-        <div style="padding: 10px; background: #fff; border-radius: 5px; border: 1px solid #ddd;">
-          <div style="font-size: 14px; color: #333; font-weight: bold;">${month}</div>
-          <div style="font-size: 16px; color: #8B2885; font-weight: bold;">${value} Form Submitted</div>
-        </div>
-      `;
-    },
-    x: {
-      show: true,
-    },
-    y: {
-      show: false,
-    },
-    z: {
-      show: false,
-    },
-  },
-
 
     grid: {
       row: {
@@ -144,33 +151,83 @@
     },
 
     yaxis: {
+      min: 0,
+      max: 100,
       labels: {
-        formatter: function (value) {
-          return value;
-        },
+        formatter: (value) => value,
         style: {
           fontSize: "14px",
         },
       },
-    }
+    },
   };
 
-      return (
-          <div className="col-xxl-12 col-xl-12">
-              <div className="card h-100">
-                  <div className="card-body">
-                      <div className="d-flex flex-wrap align-items-center justify-content-start mb-3 mt-20">
-                          <h6 className="text-lg mb-0 mt-0">Forms Submitted</h6>
-                          <ul className='salesList'>
-                            <li className="text-sm fw-semibold">X-axis: Months</li>
-                            <li className="text-sm fw-semibold">Y-axis: Number of Forms Submitted</li>
-                          </ul>
-                      </div>
-                      <ReactApexChart options={chartOptions} series={chartSeries} type="area" height={264} />
-                  </div>
+  return (
+    <div className="col-xxl-12 col-xl-12">
+      <div className="card h-100">
+        <div className="card-body">
+          {/* Tabs header */}
+          <ul className="nav nav-tabs mb-3">
+            <li className="nav-item">
+              <button
+                className={`nav-link ${activeTab === "tab2" ? "active" : ""}`}
+                onClick={() => setActiveTab("tab2")}>
+                Facility Score
+              </button>
+            </li>
+            <li className="nav-item">
+              <button
+                className={`nav-link ${activeTab === "tab1" ? "active" : ""}`}
+                onClick={() => setActiveTab("tab1")}>
+                Forms Submitted
+              </button>
+            </li>
+          </ul>
+
+          {/* Tab content */}
+          {activeTab === "tab1" && (
+            <>
+              <div className="d-flex flex-wrap align-items-center justify-content-start mb-3 mt-20">
+                <h6 className="text-lg mb-0 mt-0">Forms Submitted</h6>
+                <ul className="salesList">
+                  <li className="text-sm fw-semibold">X-axis: Months</li>
+                  <li className="text-sm fw-semibold">
+                    Y-axis: Number of Forms Submitted
+                  </li>
+                </ul>
               </div>
-          </div>
-      );
-  };
 
-  export default SalesStatisticOne;
+              <ReactApexChart
+                options={chartOptions}
+                series={activeTab === "tab1" ? monthSeries : foodSeries}
+                type="area"
+                height={264}
+              />
+            </>
+          )}
+
+          {activeTab === "tab2" && (
+            <>
+              <div className="d-flex flex-wrap align-items-center justify-content-start mb-3 mt-20">
+                <h6 className="text-lg mb-0 mt-0">Facility Score</h6>
+                <ul className="salesList">
+                  <li className="text-sm fw-semibold">X-axis: Brands</li>
+                  <li className="text-sm fw-semibold">Y-axis: Score</li>
+                </ul>
+              </div>
+
+              <ReactApexChart
+                options={chartOptions}
+                series={activeTab === "tab1" ? monthSeries : foodSeries}
+                type="area"
+                height={264}
+              />
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SalesStatisticOne;

@@ -4,7 +4,6 @@ import profile1 from "../otherImages/profileImage1.png";
 import profile2 from "../otherImages/profileImage2.png";
 import profile3 from "../otherImages/profileImage3.png";
 
-
 const ChatPage = () => {
   const [selectedChat, setSelectedChat] = useState("Sara Doe");
   const [newMessage, setNewMessage] = useState("");
@@ -111,7 +110,7 @@ const ChatPage = () => {
         id: 2,
         sender: "Tech Team",
         time: "5:20PM",
-        text: "Do you have complete the document?",
+        text: "Have you completed the document?",
         type: "received",
       },
       {
@@ -127,7 +126,7 @@ const ChatPage = () => {
         id: 1,
         sender: "Team Lead",
         time: "5:20PM",
-        text: "Do you have complete the document?",
+        text: "Have you completed the document?",
         type: "received",
       },
       {
@@ -149,13 +148,13 @@ const ChatPage = () => {
 
   const chats = [
     { id: 1, name: "Sara Doe", avatar: profile1, messageRecieved: 2 },
-    { id: 2, name: "Susan Doe", avatar: profile2 ,messageRecieved: 3},
+    { id: 2, name: "Susan Doe", avatar: profile2, messageRecieved: 3 },
     { id: 3, name: "Thomas Doe", avatar: profile3, messageRecieved: 1 },
-    { id: 4, name: "Daniel Doe", avatar: profile2,messageRecieved: 0 },
+    { id: 4, name: "Daniel Doe", avatar: profile2, messageRecieved: 0 },
     { id: 5, name: "Sara Doe", avatar: profile1, messageRecieved: 2 },
-    { id: 6, name: "Susan Doe", avatar: profile2 ,messageRecieved: 3},
+    { id: 6, name: "Susan Doe", avatar: profile2, messageRecieved: 3 },
     { id: 7, name: "Thomas Doe", avatar: profile3, messageRecieved: 1 },
-    { id: 8, name: "Daniel Doe", avatar: profile2,messageRecieved: 0 }
+    { id: 8, name: "Daniel Doe", avatar: profile2, messageRecieved: 0 },
   ];
 
   const groupChats = [
@@ -193,7 +192,8 @@ const ChatPage = () => {
 
   const getChatPreview = (chatName) => {
     const messages = allChats[chatName];
-    if (!messages || messages.length === 0) return { label: "", message: "No messages yet" };
+    if (!messages || messages.length === 0)
+      return { label: "", message: "No messages yet" };
 
     const lastMsg = messages[messages.length - 1];
 
@@ -205,10 +205,11 @@ const ChatPage = () => {
   };
 
   // Get avatar of selected chat dynamically
-  const selectedChatAvatar = chats.find(chat => chat.name === selectedChat)?.avatar;
+  const selectedChatAvatar = chats.find(
+    (chat) => chat.name === selectedChat
+  )?.avatar;
 
-
-    // Filter chats based on search query
+  // Filter chats based on search query
   const filteredChats = chats.filter((chat) =>
     chat.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -219,48 +220,74 @@ const ChatPage = () => {
   );
 
   return (
-<MasterLayout>
+    <MasterLayout>
       <section className="chat-section">
         <div className="flex chat-row row">
           {/* Left Sidebar */}
           <div className="chat-left col-md-4">
             <div className="chat-header">
               <h1>Chat</h1>
-              <button className={`tab-btn ${activeTab === "Chat" ? "active" : ""}`} onClick={() => setActiveTab("Chat")}>Chat</button>
-              <button className={`tab-btn ${activeTab === "Group Chat" ? "active" : ""}`} onClick={() => setActiveTab("Group Chat")}>Group Chat</button>
+              <button
+                className={`tab-btn ${activeTab === "Chat" ? "active" : ""}`}
+                onClick={() => setActiveTab("Chat")}>
+                Chat
+              </button>
+              <button
+                className={`tab-btn ${
+                  activeTab === "Group Chat" ? "active" : ""
+                }`}
+                onClick={() => setActiveTab("Group Chat")}>
+                Group Chat
+              </button>
               <div className="search-chat">
-                <input type="text" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                <input
+                  type="text"
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
               </div>
             </div>
 
             <div className="chat-list">
               {/* Display either chats or group chats based on selected tab */}
-              {(activeTab === "Chat" ? filteredChats : filteredGroupChats).map((chat) => {
-                const preview = getChatPreview(chat.name);
-                return (
-                  <div
-                    key={chat.id}
-                    className={`chat-item ${selectedChat === chat.name ? "active" : ""}`}
-                    onClick={() => setSelectedChat(chat.name)}
-                  >
-                    <img src={chat.avatar} alt={chat.name} className="chat-avatar" />
-                    <div className="chat-info d-flex align-items-center justify-content-between w-100">
-                      <div className="clientInfo">
-                        <h4>{chat.name}</h4>
-                        <p>{preview.message}</p>
-                      </div>
-                      <div className="clientInfoTime">
-                        <span className="chat-time">
-                          {allChats[chat.name]?.[allChats[chat.name].length - 1]?.time || ""}
-                        </span>
-                        {chat.messageRecieved !== 0 && (
-                          <span className="chat-number">{chat.messageRecieved}</span>
-                        )}
+              {(activeTab === "Chat" ? filteredChats : filteredGroupChats).map(
+                (chat) => {
+                  const preview = getChatPreview(chat.name);
+                  return (
+                    <div
+                      key={chat.id}
+                      className={`chat-item ${
+                        selectedChat === chat.name ? "active" : ""
+                      }`}
+                      onClick={() => setSelectedChat(chat.name)}>
+                      <img
+                        src={chat.avatar}
+                        alt={chat.name}
+                        className="chat-avatar"
+                      />
+                      <div className="chat-info d-flex align-items-center justify-content-between w-100">
+                        <div className="clientInfo">
+                          <h4>{chat.name}</h4>
+                          <p>{preview.message}</p>
+                        </div>
+                        <div className="clientInfoTime">
+                          <span className="chat-time">
+                            {allChats[chat.name]?.[
+                              allChats[chat.name].length - 1
+                            ]?.time || ""}
+                          </span>
+                          {chat.messageRecieved !== 0 && (
+                            <span className="chat-number">
+                              {chat.messageRecieved}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                }
+              )}
             </div>
           </div>
 
@@ -280,9 +307,15 @@ const ChatPage = () => {
 
               <div className="chat-messages">
                 {allChats[selectedChat]?.map((msg) => (
-                  <div key={msg.id} className={`chat-bubble ${msg.type === "sent" ? "sent" : "received"}`}>
+                  <div
+                    key={msg.id}
+                    className={`chat-bubble ${
+                      msg.type === "sent" ? "sent" : "received"
+                    }`}>
                     <div className="recieved-name">
-                      {msg.type === "received" && <span className="chat-sender">{msg.sender}</span>}
+                      {msg.type === "received" && (
+                        <span className="chat-sender">{msg.sender}</span>
+                      )}
                       <span className="chat-time">{msg.time}</span>
                     </div>
                     <p>{msg.text}</p>
